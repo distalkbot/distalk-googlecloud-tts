@@ -5,7 +5,6 @@ import os
 import traceback
 import re
 import json
-import emoji
 from google.cloud import texttospeech
 
 prefix = os.getenv('DISCORD_BOT_PREFIX', default='🦑')
