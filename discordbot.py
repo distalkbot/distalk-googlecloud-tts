@@ -42,9 +42,6 @@ with open('/tmp/credentials.json', 'w') as file:
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/tmp/credentials.json'
 tts_client = texttospeech.TextToSpeechClient()
 
-with open('emoji_ja.json') as file:
-    emoji_dataset = json.load(file)
-
 @client.event
 async def on_ready():
     presence = f'{prefix}ヘルプ | 0/{len(client.guilds)}サーバー'
@@ -92,9 +89,6 @@ async def on_message(message):
         if message.guild.voice_client:
             text = message.content
             text = text.replace('\n', '、')
-            for char in text:
-                if(char in emoji.UNICODE_EMOJI['en']):
-                    text = text.replace(char, emoji_dataset[char]['short_name'])
             pattern = r' ?<@(\d+)> '
             match = re.findall(pattern, text)
             for user_id in match:
