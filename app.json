@@ -1,6 +1,40 @@
 {
-  "name": "discordpy-startup",
-  "description": "Herokuでdiscord.pyを始めるテンプレート",
-  "repository": "https://github.com/DiscordBotPortalJP/discordpy-startup",
-  "keywords": ["python", "discord", "bot"]
+  "name": "distalk",
+  "description": "Discord TTS on heroku, Powered by Google Cloud Platform Text-to-Speech API.",
+  "repository": "https://github.com/distalkbot/distalk-gcp-tts",
+  "keywords": ["python", "discord", "bot"],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-python.git"
+    },
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    },
+    {
+      "url": "https://github.com/Crazycatz00/heroku-buildpack-libopus.git"
+    }
+  ],
+  "env": {
+    "DISCORD_BOT_TOKEN": {
+            "description": "ボットのトークンを入力します。"
+    },
+    "DISCORD_BOT_PREFIX": {
+            "description": "ボットのプレフィックスを入力します。空欄にすると「🦑」に設定されます。",
+            "required": false
+    },
+    "DISCORD_BOT_VOICE": {
+      "description": "ボットの声の種類を設定します。空欄にすると「ja-JP-Wavenet-B」に設定されます。（https://cloud.google.com/text-to-speech/docs/voices）",
+      "required": false
+    },
+    "GOOGLE_TYPE": "",
+    "GOOGLE_PROJECT_ID": "",
+    "GOOGLE_PRIVATE_KEY_ID": "",
+    "GOOGLE_PRIVATE_KEY": "",
+    "GOOGLE_CLIENT_EMAIL": "",
+    "GOOGLE_CLIENT_ID": "",
+    "GOOGLE_AUTH_URI": "https://accounts.google.com/o/oauth2/auth",
+    "GOOGLE_TOKEN_URI": "https://oauth2.googleapis.com/token",
+    "GOOGLE_AUTH_PROVIDER_CERT": "https://www.googleapis.com/oauth2/v1/certs",
+    "GOOGLE_CLIENT_CERT": ""
+  }
 }
