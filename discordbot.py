@@ -88,12 +88,12 @@ async def on_message(message):
         if message.guild.voice_client:
             text = message.content
             text = text.replace('\n', '、')
-            pattern = r' ?<@(\d+)> '
+            pattern = r'<@(\d+)>'
             match = re.findall(pattern, text)
             for user_id in match:
                 user = await client.fetch_user(user_id)
-                username = f'、{user.name}へのメンション、'
-                text = re.sub(f' ?<@{user_id}> ', username, text)
+                user_name = f'、{user.name}へのメンション、'
+                text = re.sub(f'<@{user_id}>', user_name, text)
             pattern = r'<:([a-zA-Z0-9_]+):\d+>'
             match = re.findall(pattern, text)
             for emoji_name in match:
