@@ -94,6 +94,12 @@ async def on_message(message):
                 user = await client.fetch_user(user_id)
                 user_name = f'、{user.name}へのメンション、'
                 text = re.sub(f'<@{user_id}>', user_name, text)
+            pattern = r'<@&(\d+)>'
+            match = re.findall(pattern, text)
+            for role_id in match:
+                role = message.guild.get_role(int(role_id))
+                role_name = f'、{role.name}へのメンション、'
+                text = re.sub(f'<@&{role_id}>', role_name, text)
             pattern = r'<:([a-zA-Z0-9_]+):\d+>'
             match = re.findall(pattern, text)
             for emoji_name in match:
