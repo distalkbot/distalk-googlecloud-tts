@@ -162,12 +162,13 @@ async def on_voice_state_update(member, before, after):
                     source = discord.FFmpegPCMAudio('/tmp/message.mp3')
                     member.guild.voice_client.play(source)
     elif before.channel != after.channel:
-        if member.guild.voice_client.channel is before.channel:
-            if len(member.guild.voice_client.channel.members) == 1 or member.voice.self_mute:
-                await asyncio.sleep(0.5)
-                await member.guild.voice_client.disconnect()
-                await asyncio.sleep(0.5)
-                await after.channel.connect()
+        if member.guild.voice_client:
+            if member.guild.voice_client.channel is before.channel:
+                if len(member.guild.voice_client.channel.members) == 1 or member.voice.self_mute:
+                    await asyncio.sleep(0.5)
+                    await member.guild.voice_client.disconnect()
+                    await asyncio.sleep(0.5)
+                    await after.channel.connect()
 
 @client.event
 async def on_command_error(ctx, error):
