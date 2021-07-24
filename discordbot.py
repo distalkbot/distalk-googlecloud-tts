@@ -150,17 +150,18 @@ async def on_voice_state_update(member, before, after):
             presence = f'{prefix}ヘルプ | {len(client.voice_clients)}/{len(client.guilds)}サーバー'
             await client.change_presence(activity=discord.Game(name=presence))
         else:
-            if member.guild.voice_client.channel is before.channel:
-                if len(member.guild.voice_client.channel.members) == 1:
-                    await asyncio.sleep(0.5)
-                    await member.guild.voice_client.disconnect()
-                else:
-                    text = member.name + 'さんが退室しました'
-                    while member.guild.voice_client.is_playing():
+            if member.guild.voice_client:
+                if member.guild.voice_client.channel is before.channel:
+                    if len(member.guild.voice_client.channel.members) == 1:
                         await asyncio.sleep(0.5)
-                    tts(text)
-                    source = discord.FFmpegPCMAudio('/tmp/message.mp3')
-                    member.guild.voice_client.play(source)
+                        await member.guild.voice_client.disconnect()
+                    else:
+                        text = member.name + 'さんが退室しました'
+                        while member.guild.voice_client.is_playing():
+                            await asyncio.sleep(0.5)
+                        tts(text)
+                        source = discord.FFmpegPCMAudio('/tmp/message.mp3')
+                        member.guild.voice_client.play(source)
     elif before.channel != after.channel:
         if member.guild.voice_client:
             if member.guild.voice_client.channel is before.channel:
