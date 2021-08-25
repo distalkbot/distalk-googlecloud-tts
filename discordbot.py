@@ -116,8 +116,11 @@ async def on_message(message):
                 while text[-2:-1] == 'w' or text[-2:-1] == 'W' or text[-2:-1] == 'ｗ' or text[-2:-1] == 'W':
                     text = text[:-1]
                 text = text[:-1] + '、ワラ'
-            if message.attachments:
-                text += '、添付ファイル'
+            for attachment in message.attachments:
+                if attachment.filename.endswith((".jpg", ".jpeg", ".gif", ".png", ".bmp")):
+                    text += '、画像'
+                else:
+                    text += '、添付ファイル'
             while message.guild.voice_client.is_playing():
                 await asyncio.sleep(0.5)
             tts(text)
