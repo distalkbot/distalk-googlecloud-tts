@@ -13,6 +13,8 @@ tts_lang = os.getenv('DISCORD_BOT_LANG', default='ja-JP')
 tts_voice = os.getenv('DISCORD_BOT_VOICE', default='ja-JP-Wavenet-B')
 token = os.environ['DISCORD_BOT_TOKEN']
 client = commands.Bot(command_prefix=prefix)
+with open('emoji_ja.json', encoding='utf-8') as file:
+    emoji_dataset = json.load(file)
 
 google_type = os.environ['GOOGLE_TYPE']
 google_project_id = os.environ['GOOGLE_PROJECT_ID']
@@ -91,8 +93,6 @@ async def on_message(message):
             text = text.replace('\n', '、')
             text = re.sub(r'[\U0000FE00-\U0000FE0F]', '', text)
             text = re.sub(r'[\U0001F3FB-\U0001F3FF]', '', text)
-            with open('emoji_ja.json', encoding='utf-8') as file:
-                emoji_dataset = json.load(file)
             for char in text:
                 if char in emoji.UNICODE_EMOJI['en'] and char in emoji_dataset:
                     text = text.replace(char, emoji_dataset[char]['short_name'])
