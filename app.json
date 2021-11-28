@@ -1,7 +1,7 @@
 {
   "name": "distalk",
   "description": "Discord TTS on heroku, Powered by Google Cloud Platform Text-to-Speech API.",
-  "repository": "https://github.com/distalkbot/distalk-gcp-tts",
+  "repository": "https://github.com/distalkbot/distalk-googlecloud-tts",
   "keywords": ["python", "discord", "bot"],
   "buildpacks": [
     {
