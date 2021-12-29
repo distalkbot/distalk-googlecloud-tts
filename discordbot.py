@@ -86,7 +86,7 @@ async def 切断(ctx):
 @client.event
 async def on_message(message):
     if message.guild.voice_client:
-        if message.content.startswith(prefix):
+        if not message.content.startswith(prefix):
             if not message.author.bot:
                 text = message.content
 
