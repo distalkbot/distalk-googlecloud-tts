@@ -81,6 +81,8 @@ async def 切断(ctx):
         if ctx.voice_client is None:
             await ctx.send('ボイスチャンネルに接続していません。')
         else:
+            filename = f'/tmp/{str(ctx.message.guild.id)}_{str(ctx.message.guild.voice_client.channel.id)}.mp3'
+            os.remove(filename)
             await ctx.voice_client.disconnect()
 
 @client.event
@@ -149,8 +151,9 @@ async def on_message(message):
 
                 while message.guild.voice_client.is_playing():
                     await asyncio.sleep(0.5)
-                tts(text)
-                source = discord.FFmpegPCMAudio('/tmp/message.mp3')
+                filename = f'/tmp/{str(message.guild.id)}_{str(message.guild.voice_client.channel.id)}.mp3'
+                tts(filename, text)
+                source = discord.FFmpegPCMAudio(filename)
                 message.guild.voice_client.play(source)
     await client.process_commands(message)
 
@@ -169,8 +172,9 @@ async def on_voice_state_update(member, before, after):
                     text = member.name + 'さんが入室しました'
                     while member.guild.voice_client.is_playing():
                         await asyncio.sleep(0.5)
-                    tts(text)
-                    source = discord.FFmpegPCMAudio('/tmp/message.mp3')
+                    filename = f'/tmp/{str(member.guild.id)}_{str(member.guild.voice_client.channel.id)}.mp3'
+                    tts(filename, text)
+                    source = discord.FFmpegPCMAudio(filename)
                     member.guild.voice_client.play(source)
     elif after.channel is None:
         if member.id == client.user.id:
@@ -180,14 +184,17 @@ async def on_voice_state_update(member, before, after):
             if member.guild.voice_client:
                 if member.guild.voice_client.channel is before.channel:
                     if len(member.guild.voice_client.channel.members) == 1:
+                        filename = f'/tmp/{str(member.guild.id)}_{str(member.guild.voice_client.channel.id)}.mp3'
+                        os.remove(filename)
                         await asyncio.sleep(0.5)
                         await member.guild.voice_client.disconnect()
                     else:
                         text = member.name + 'さんが退室しました'
                         while member.guild.voice_client.is_playing():
                             await asyncio.sleep(0.5)
-                        tts(text)
-                        source = discord.FFmpegPCMAudio('/tmp/message.mp3')
+                        filename = f'/tmp/{str(member.guild.id)}_{str(member.guild.voice_client.channel.id)}.mp3'
+                        tts(filename, text)
+                        source = discord.FFmpegPCMAudio(filename)
                         member.guild.voice_client.play(source)
     elif before.channel != after.channel:
         if member.guild.voice_client:
@@ -212,7 +219,7 @@ async def ヘルプ(ctx):
 {prefix}切断：ボイスチャンネルから切断します。'''
     await ctx.send(message)
 
-def tts(message):
+def tts(filename, message):
     synthesis_input = texttospeech.SynthesisInput(text=message)
     voice = texttospeech.VoiceSelectionParams(
         language_code=tts_lang, name=tts_voice
@@ -223,7 +230,7 @@ def tts(message):
     response = tts_client.synthesize_speech(
         input=synthesis_input, voice=voice, audio_config=audio_config
     )
-    with open('/tmp/message.mp3', 'wb') as out:
+    with open(filename, 'wb') as out:
         out.write(response.audio_content)
 
 
