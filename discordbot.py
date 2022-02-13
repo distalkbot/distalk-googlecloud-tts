@@ -82,7 +82,8 @@ async def 切断(ctx):
             await ctx.send('ボイスチャンネルに接続していません。')
         else:
             filename = f'/tmp/{str(ctx.message.guild.id)}_{str(ctx.message.guild.voice_client.channel.id)}.mp3'
-            os.remove(filename)
+            if os.path.isfile(filename):
+                os.remove(filename)
             await ctx.voice_client.disconnect()
 
 @client.event
@@ -185,7 +186,8 @@ async def on_voice_state_update(member, before, after):
                 if member.guild.voice_client.channel is before.channel:
                     if len(member.guild.voice_client.channel.members) == 1:
                         filename = f'/tmp/{str(member.guild.id)}_{str(member.guild.voice_client.channel.id)}.mp3'
-                        os.remove(filename)
+                        if os.path.isfile(filename):
+                            os.remove(filename)
                         await asyncio.sleep(0.5)
                         await member.guild.voice_client.disconnect()
                     else:
