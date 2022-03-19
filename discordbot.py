@@ -137,6 +137,10 @@ async def on_message(message):
                 pattern = r'https?://[\w/:%#\$&\?\(\)~\.=\+\-]+'
                 text = re.sub(pattern, '、URL', text)
 
+                # Replace spoiler
+                pattern = r'\|{2}.+?\|{2}'
+                text = re.sub(pattern, '伏せ字', text)
+
                 # Replace laughing expression
                 if text[-1:] == 'w' or text[-1:] == 'W' or text[-1:] == 'ｗ' or text[-1:] == 'W':
                     while text[-2:-1] == 'w' or text[-2:-1] == 'W' or text[-2:-1] == 'ｗ' or text[-2:-1] == 'W':
