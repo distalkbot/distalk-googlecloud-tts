@@ -158,7 +158,7 @@ async def on_message(message):
                     await asyncio.sleep(0.5)
                 filename = f'/tmp/{str(message.guild.id)}_{str(message.guild.voice_client.channel.id)}.mp3'
                 tts(filename, text)
-                source = discord.FFmpegPCMAudio(filename)
+                source = await discord.FFmpegOpusAudio.from_probe(filename)
                 message.guild.voice_client.play(source)
     await client.process_commands(message)
 
@@ -179,7 +179,7 @@ async def on_voice_state_update(member, before, after):
                         await asyncio.sleep(0.5)
                     filename = f'/tmp/{str(member.guild.id)}_{str(member.guild.voice_client.channel.id)}.mp3'
                     tts(filename, text)
-                    source = discord.FFmpegPCMAudio(filename)
+                    source = await discord.FFmpegOpusAudio.from_probe(filename)
                     member.guild.voice_client.play(source)
     elif after.channel is None:
         if member.id == client.user.id:
@@ -200,7 +200,7 @@ async def on_voice_state_update(member, before, after):
                             await asyncio.sleep(0.5)
                         filename = f'/tmp/{str(member.guild.id)}_{str(member.guild.voice_client.channel.id)}.mp3'
                         tts(filename, text)
-                        source = discord.FFmpegPCMAudio(filename)
+                        source = await discord.FFmpegOpusAudio.from_probe(filename)
                         member.guild.voice_client.play(source)
     elif before.channel != after.channel:
         if member.guild.voice_client:
