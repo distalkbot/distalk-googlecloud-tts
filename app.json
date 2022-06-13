@@ -36,5 +36,13 @@
     "GOOGLE_TOKEN_URI": "https://oauth2.googleapis.com/token",
     "GOOGLE_AUTH_PROVIDER_X509_CERT_URL": "https://www.googleapis.com/oauth2/v1/certs",
     "GOOGLE_CLIENT_X509_CERT_URL": ""
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql"
+    }
+  ],
+  "scripts": {
+    "postdeploy": "python init_dict.py"
   }
 }

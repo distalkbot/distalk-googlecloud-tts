@@ -1,3 +1,4 @@
 discord.py[voice]
 google-cloud-texttospeech
 emoji
+psycopg2

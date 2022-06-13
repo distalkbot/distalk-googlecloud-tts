@@ -7,6 +7,7 @@ import re
 import emoji
 import json
 from google.cloud import texttospeech
+import psycopg2
 
 prefix = os.getenv('DISCORD_BOT_PREFIX', default='🦑')
 tts_lang = os.getenv('DISCORD_BOT_LANG', default='ja-JP')
@@ -15,6 +16,7 @@ token = os.environ['DISCORD_BOT_TOKEN']
 client = commands.Bot(command_prefix=prefix)
 with open('emoji_ja.json', encoding='utf-8') as file:
     emoji_dataset = json.load(file)
+database_url = os.environ.get('DATABASE_URL')
 
 google_type = os.environ['GOOGLE_TYPE']
 google_project_id = os.environ['GOOGLE_PROJECT_ID']
@@ -86,6 +88,56 @@ async def 切断(ctx):
                 os.remove(filename)
             await ctx.voice_client.disconnect()
 
+@client.command()
+async def 辞書登録(ctx, *args):
+    if len(args) < 2:
+        await ctx.send(f'「{prefix}辞書登録 単語 よみがな」で入力してください。')
+    else:
+        with psycopg2.connect(database_url) as conn:
+            with conn.cursor() as cur:
+                guild_id = ctx.guild.id
+                word = args[0]
+                kana = args[1]
+                sql = 'INSERT INTO dictionary (guildId, word, kana) VALUES (%s,%s,%s) ON CONFLICT (guildId, word) DO UPDATE SET kana = EXCLUDED.kana'
+                value = (guild_id, word, kana)
+                cur.execute(sql, value)
+                await ctx.send(f'辞書登録しました：{word}→{kana}\n')
+
+@client.command()
+async def 辞書削除(ctx, arg):
+    with psycopg2.connect(database_url) as conn:
+        with conn.cursor() as cur:
+            guild_id = ctx.guild.id
+            word = arg
+
+            sql = 'SELECT * FROM dictionary WHERE guildId = %s and word = %s'
+            value = (guild_id, word)
+            cur.execute(sql, value)
+            rows = cur.fetchall()
+
+            if len(rows) == 0:
+                await ctx.send(f'辞書登録されていません：{word}')
+            else:
+                sql = 'DELETE FROM dictionary WHERE guildId = %s and word = %s'
+                cur.execute(sql, value)
+                await ctx.send(f'辞書削除しました：{word}')
+
+@client.command()
+async def 辞書確認(ctx):
+    with psycopg2.connect(database_url) as conn:
+        with conn.cursor() as cur:
+            sql = 'SELECT * FROM dictionary WHERE guildId = %s'
+            value = (ctx.guild.id, )
+            cur.execute(sql, value)
+            rows = cur.fetchall()
+            text = '辞書一覧\n'
+            if len(rows) == 0:
+                text += 'なし'
+            else:
+                for row in rows:
+                    text += f'{row[1]}→{row[2]}\n'
+            await ctx.send(text)
+
 @client.event
 async def on_message(message):
     if message.guild.voice_client:
@@ -95,6 +147,18 @@ async def on_message(message):
 
                 # Add author's name
                 text = message.author.name + '、' + text
+
+                # Replace dictionary
+                with psycopg2.connect(database_url) as conn:
+                    with conn.cursor() as cur:
+                        sql = 'SELECT * FROM dictionary WHERE guildId = %s'
+                        value = (message.guild.id, )
+                        cur.execute(sql, value)
+                        rows = cur.fetchall()
+                        for row in rows:
+                            word = row[1]
+                            kana = row[2]
+                            text = text.replace(word, kana)
 
                 # Replace new line
                 text = text.replace('\n', '、')
@@ -220,9 +284,11 @@ async def on_command_error(ctx, error):
 @client.command()
 async def ヘルプ(ctx):
     message = f'''◆◇◆{client.user.name}の使い方◆◇◆
-{prefix}＋コマンドで命令できます。
 {prefix}接続：ボイスチャンネルに接続します。
-{prefix}切断：ボイスチャンネルから切断します。'''
+{prefix}切断：ボイスチャンネルから切断します。
+{prefix}辞書確認：辞書を確認します。
+{prefix}辞書追加 単語 よみがな：辞書に[単語]を[よみがな]として追加します。
+{prefix}辞書削除 単語：[単語]のよみがなを削除します。'''
     await ctx.send(message)
 
 def tts(filename, message):
