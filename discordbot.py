@@ -286,9 +286,9 @@ async def ヘルプ(ctx):
     message = f'''◆◇◆{client.user.name}の使い方◆◇◆
 {prefix}接続：ボイスチャンネルに接続します。
 {prefix}切断：ボイスチャンネルから切断します。
-{prefix}辞書確認：辞書を確認します。
+{prefix}辞書確認：辞書に登録されている単語を確認します。
 {prefix}辞書追加 単語 よみがな：辞書に[単語]を[よみがな]として追加します。
-{prefix}辞書削除 単語：[単語]のよみがなを削除します。'''
+{prefix}辞書削除 単語：辞書から[単語]のよみがなを削除します。'''
     await ctx.send(message)
 
 def tts(filename, message):
