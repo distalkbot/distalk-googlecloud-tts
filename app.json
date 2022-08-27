@@ -17,14 +17,14 @@
   ],
   "env": {
     "DISCORD_BOT_TOKEN": {
-            "description": "ボットのトークンを入力します。"
+            "description": "Enter your Discord bot token. ボットのトークンを入力します。"
     },
     "DISCORD_BOT_PREFIX": {
-            "description": "ボットのプレフィックスを入力します。空欄にすると「🦑」に設定されます。",
+            "description": "Enter your prefix. Set 🦑 as your prefix if you leave it blank. ボットのプレフィックスを入力します。空欄にすると「🦑」に設定されます。",
             "required": false
     },
     "DISCORD_BOT_VOICE": {
-      "description": "ボットの声の種類を設定します。空欄にすると「ja-JP-Wavenet-B」に設定されます。（https://cloud.google.com/text-to-speech/docs/voices）",
+      "description": "Enter the voice type. Set ja-JP-Wavenet-B if you leave it blank. ボットの声の種類を設定します。空欄にすると「ja-JP-Wavenet-B」に設定されます。（https://cloud.google.com/text-to-speech/docs/voices）",
       "required": false
     },
     "GOOGLE_TYPE": "",
