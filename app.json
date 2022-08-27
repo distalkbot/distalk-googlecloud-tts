@@ -3,6 +3,7 @@
   "description": "Discord TTS on heroku, Powered by Google Cloud Platform Text-to-Speech API.",
   "repository": "https://github.com/distalkbot/distalk-googlecloud-tts",
   "keywords": ["python", "discord", "bot"],
+  "stack": "heroku-20",
   "buildpacks": [
     {
       "url": "https://github.com/heroku/heroku-buildpack-python.git"
