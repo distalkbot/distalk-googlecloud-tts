@@ -1,4 +1,4 @@
 discord.py[voice]>=2.0.0
 google-cloud-texttospeech
-emoji
+emoji>=2.0.0
 psycopg2

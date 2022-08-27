@@ -4,7 +4,7 @@ from discord.ext import commands
 import os
 import traceback
 import re
-import emoji
+from emoji import unicode_codes
 import json
 from google.cloud import texttospeech
 import psycopg2
@@ -185,7 +185,7 @@ async def on_message(message):
                 text = re.sub(r'[\U0000FE00-\U0000FE0F]', '', text)
                 text = re.sub(r'[\U0001F3FB-\U0001F3FF]', '', text)
                 for char in text:
-                    if char in emoji.UNICODE_EMOJI['en'] and char in emoji_dataset:
+                    if char in unicode_codes.EMOJI_DATA and char in emoji_dataset:
                         text = text.replace(char, emoji_dataset[char]['short_name'])
 
                 # Replace Discord emoji
